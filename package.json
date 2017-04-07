@@ -1,0 +1,27 @@
+{
+  "name": "liri-node-app",
+  "version": "0.0.1",
+  "description": "First app using node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cashuna/liri-node-app.git"
+  },
+  "keywords": [
+    "node"
+  ],
+  "author": "C. Marshall",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cashuna/liri-node-app/issues"
+  },
+  "homepage": "https://github.com/Cashuna/liri-node-app#readme",
+  "dependencies": {
+    "request": "^2.81.0",
+    "spotify": "^0.3.0",
+    "twitter": "^1.7.0"
+  }
+}
