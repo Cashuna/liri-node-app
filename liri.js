@@ -32,13 +32,12 @@ var title = process.argv.slice(3, process.argv.length).join(" ");
 var auth = require("./keys.js"), access = auth.twitterKeys;
 var fs = require("fs"), request = require("request"), spotify = require("spotify");
 var search = process.argv[3], inputCmd = process.argv[2]; //options my-tweets, spotifiy-this-song, movie-this, do-what-it-says
-//var msg = "If you haven't watched Mr.Nobody, then you should: <a href='http://www.imdb.com/title/tt0485947'>Click here</a>";
+var msg = "If you haven't watched Mr.Nobody, then you should: http://www.imdb.com/title/tt0485947";
 var movieURL = "http://www.omdbapi.com/?t=" + searchThis(process.argv) + "&r=json";
-var twitterURL = "https://api.twitter.com/1.1/statuses/user_timeline.json"; //%40coding_n00bie
+var twitterURL = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
 var Twitter = require("twitter"), twitterClient = Twitter(access);
 var twitParams = {screen_name: "coding_n00bie", count: 20, exclude_replies: true};
-//you need your api key for the OMDB site
 
 
 //==========================================Program=========================================================
