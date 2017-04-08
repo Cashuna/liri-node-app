@@ -4,16 +4,16 @@ var searchThis = function (a) {//properly formats user input for the url
     var array = a.slice(3, a.length);
     if (array.length > 1)
     {
-        search2 = array[0];
+        searchThis = array[0];
         for(var i=1; i < array.length; i++){
-            search2 = search2 +'+'+ array[i];
+            searchThis = searchThis  +'+'+ array[i];
         }
     }
     else{
-        search2 = a[2];
+        searchThis  = array[0];
     }
 
-    return search2;
+    return searchThis;
 };
 
 function movieCall (URL){//requests api dynamically using user's input
@@ -50,12 +50,10 @@ function spotify(){//returns for tracks with information based on user input
     spotifyRequire.search({type: "track", query: title}, function (err, spotifyData) {
         if (err) {
             console.log("Ah, an error: " + err);
-            return;
         } else if (!title) {
-            spotify.search({type: "track", query: "The Sign"}, function (err2, spotData) {
+            spotifyRequire.search({type: "track", query: "The Sign"}, function (err2, spotData) {
                 if (err2) {
                     console.log('Error occurred when title was not given: ' + err);
-                    return;
                 } else {
                     var objPath = spotData.tracks.items[14];
                     console.log("Track name: " + objPath.name + "\n");
@@ -63,14 +61,15 @@ function spotify(){//returns for tracks with information based on user input
                     console.log("Album: " + objPath.album.name + "\n");
                     console.log("Artist: " + objPath.artists[0].name + "\n");
                 }
-            });
-        } else {
-            var objPath = spotifyData.tracks.items[0];
+        });
+        } else{
+            objPath = spotifyData.tracks.items[0];
             console.log("Track name: " + objPath.name + "\n");
             console.log("Here's a preview link: " + objPath.preview_url + "\n");
             console.log("Album: " + objPath.album.name + "\n");
             console.log("Artist: " + objPath.artists[0].name + "\n");
         }
+
     });
 }
 
