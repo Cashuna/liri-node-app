@@ -37,7 +37,7 @@ var movieURL = "http://www.omdbapi.com/?t=" + searchThis(process.argv) + "&r=jso
 var twitterURL = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 
 var Twitter = require("twitter"), twitterClient = Twitter(access);
-var twitParams = {screen_name: "coding_n00bie", count: 20, exclude_replies: true};
+var twitParams = {screen_name: search, count: 20, exclude_replies: true};
 
 
 //==========================================Program=========================================================
@@ -52,7 +52,9 @@ switch(inputCmd){
  case "my-tweets": twitterClient.get('statuses/user_timeline', twitParams, function(err, tweets){
      if(err){
  		console.log("Something went wrong. Here is the error: "+ err);
- 	}else {
+ 	}else if(!search){
+      console.log("You must enter a user name.");
+     } else{
          var userView = tweets.length;
         for (var i = 0; i < userView; i++) {
             console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nAh, here's tweet #"+ (userView - i));
@@ -106,7 +108,3 @@ switch(inputCmd){
 
     default: console.log("Something went wrong. First enter movie-title, my-tweets, spotify-track, or do-what-it-says." + inputCmd);
 }
-
-
-
-//data.tracks.items.length  data.tracks.items.artist.length
