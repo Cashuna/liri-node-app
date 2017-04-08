@@ -1,6 +1,6 @@
 //===========================================Functions=========================================================
-// Grab or assemble the movie name and store it in a variable called "movieName"
-var searchThis = function (a) {
+
+var searchThis = function (a) {//properly formats user input for the url
     var array = a.slice(3, a.length);
     if (array.length > 1)
     {
@@ -16,7 +16,7 @@ var searchThis = function (a) {
     return search2;
 };
 
-function movieCall (URL){
+function movieCall (URL){//requests api dynamically using user's input
 
     request(URL, function(err, response, body){
         var object = JSON.parse(body);
@@ -27,7 +27,7 @@ function movieCall (URL){
     });
 }
 
-function doWhat(){
+function doWhat(){//receives data from an external file and formats text for url input
     fs.readFile("random.txt", "utf8", function(fileErr, fileData){
         if(fileErr){
             console.log("This is the callback error for file: "+err);
@@ -46,8 +46,8 @@ function doWhat(){
 }
 
 
-function spotify(){
-    spotify.search({type: "track", query: title}, function (err, spotifyData) {
+function spotify(){//returns for tracks with information based on user input
+    spotifyRequire.search({type: "track", query: title}, function (err, spotifyData) {
         if (err) {
             console.log("Ah, an error: " + err);
             return;
@@ -74,7 +74,7 @@ function spotify(){
     });
 }
 
-function tweets(){
+function tweets(){//returns tweets based on user input
     twitterClient.get('statuses/user_timeline', twitParams, function (err, tweets) {
         if (err) {
             console.log("Something went wrong. Here is the error: " + err);
@@ -92,11 +92,10 @@ function tweets(){
 //=======================================additional global variables===============================================
 var title = process.argv.slice(3, process.argv.length).join(" ");
 var auth = require("./keys.js"), access = auth.twitterKeys;
-var fs = require("fs"), request = require("request"), spotify = require("spotify");
+var fs = require("fs"), request = require("request"), spotifyRequire = require("spotify");
 var search = process.argv[3], inputCmd = process.argv[2];
 var msg = "If you haven't watched Mr.Nobody, then you should: http://www.imdb.com/title/tt0485947";
-var movieURL = "http://www.omdbapi.com/?t=" + searchThis(process.argv) + "&r=json";
-var twitterURL = "https://api.twitter.com/1.1/statuses/user_timeline.json";
+var movieURL = "http://www.omdbapi.com/?t="+ searchThis(process.argv) +"&r=json";
 
 var Twitter = require("twitter"), twitterClient = Twitter(access);
 var twitParams = {screen_name: search, count: 20, exclude_replies: true};
