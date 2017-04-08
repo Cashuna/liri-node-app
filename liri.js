@@ -27,72 +27,10 @@ function movieCall (URL){
     });
 }
 
-//=======================================additional global variables===============================================
-var title = process.argv.slice(3, process.argv.length).join(" ");
-var auth = require("./keys.js"), access = auth.twitterKeys;
-var fs = require("fs"), request = require("request"), spotify = require("spotify");
-var search = process.argv[3], inputCmd = process.argv[2]; //options my-tweets, spotifiy-this-song, movie-this, do-what-it-says
-var msg = "If you haven't watched Mr.Nobody, then you should: http://www.imdb.com/title/tt0485947";
-var movieURL = "http://www.omdbapi.com/?t=" + searchThis(process.argv) + "&r=json";
-var twitterURL = "https://api.twitter.com/1.1/statuses/user_timeline.json";
-
-var Twitter = require("twitter"), twitterClient = Twitter(access);
-var twitParams = {screen_name: search, count: 20, exclude_replies: true};
-
-
-//==========================================Program=========================================================
-switch(inputCmd){
- case "movie-title":	if(process.argv[3]){
- 						 movieCall(movieURL);
-	  					}else{
-	  						movieCall("http://www.omdbapi.com/?t=Mr.+Nobody&r=json");
-	  						console.log(msg+".\nIt's on Netflix.");
-	  					} break;
-
- case "my-tweets": twitterClient.get('statuses/user_timeline', twitParams, function(err, tweets){
-     if(err){
- 		console.log("Something went wrong. Here is the error: "+ err);
- 	}else if(!search){
-      console.log("You must enter a user name.");
-     } else{
-         var userView = tweets.length;
-        for (var i = 0; i < userView; i++) {
-            console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nAh, here's tweet #"+ (userView - i));
-          console.log("%s : %s ", tweets[i].text, tweets[i].created_at);
-        }
-    }
- }); break;
-
- case "spotify-track":  spotify.search ({type: "track", query: title}, function(err, spotifyData){
- 	if(err){
-        console.log("Ah, an error: "+err);
-        return;
-    }else if(!title){
-        spotify.search ({type: "track", query: "The Sign"}, function (err2, spotData) {
-            if(err2) {
-                console.log('Error occurred when title was not given: ' + err);
-                return;
-            } else {
-                var objPath = spotData.tracks.items[14];
-                console.log("Track name: " + objPath.name + "\n");
-                console.log("Here's a preview link: " + objPath.preview_url + "\n");
-                console.log("Album: " + objPath.album.name + "\n");
-                console.log("Artist: " + objPath.artists[0].name + "\n");
-            }
-        });
- 	}else{
-        var objPath = spotifyData.tracks.items[0];
- 		console.log("Track name: "+objPath.name+"\n");
-        console.log("Here's a preview link: "+objPath.preview_url+"\n");
-        console.log("Album: "+objPath.album.name+"\n");
-        console.log("Artist: "+objPath.artists[0].name+"\n");
-    }
- }); break;
-
- case "do-what-it-says":
- 	fs.readFile("random.txt", "utf8", function(fileErr, fileData){
- 	    if(fileErr){
- 	        console.log("This is the callback error for file: "+err);
+function doWhat(){
+    fs.readFile("random.txt", "utf8", function(fileErr, fileData){
+        if(fileErr){
+            console.log("This is the callback error for file: "+err);
         }else {
             var textArray = fileData.split(",");
             spotify.search({type: "track", query: textArray[1]}, function (spotErr, spotData) {
@@ -104,7 +42,89 @@ switch(inputCmd){
                 }
             });
         }
-    }); break;
+    });
+}
 
-    default: console.log("Something went wrong. First enter movie-title, my-tweets, spotify-track, or do-what-it-says." + inputCmd);
+
+function spotify(){
+    spotify.search({type: "track", query: title}, function (err, spotifyData) {
+        if (err) {
+            console.log("Ah, an error: " + err);
+            return;
+        } else if (!title) {
+            spotify.search({type: "track", query: "The Sign"}, function (err2, spotData) {
+                if (err2) {
+                    console.log('Error occurred when title was not given: ' + err);
+                    return;
+                } else {
+                    var objPath = spotData.tracks.items[14];
+                    console.log("Track name: " + objPath.name + "\n");
+                    console.log("Here's a preview link: " + objPath.preview_url + "\n");
+                    console.log("Album: " + objPath.album.name + "\n");
+                    console.log("Artist: " + objPath.artists[0].name + "\n");
+                }
+            });
+        } else {
+            var objPath = spotifyData.tracks.items[0];
+            console.log("Track name: " + objPath.name + "\n");
+            console.log("Here's a preview link: " + objPath.preview_url + "\n");
+            console.log("Album: " + objPath.album.name + "\n");
+            console.log("Artist: " + objPath.artists[0].name + "\n");
+        }
+    });
+}
+
+function tweets(){
+    twitterClient.get('statuses/user_timeline', twitParams, function (err, tweets) {
+        if (err) {
+            console.log("Something went wrong. Here is the error: " + err);
+        } else if (!search) {
+            console.log("You must enter a user name.");
+        } else {
+            var userView = tweets.length;
+            for (var i = 0; i < userView; i++) {
+                console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nAh, here's tweet #" +(userView - i));
+                console.log("%s : %s ", tweets[i].text, tweets[i].created_at);
+            }
+        }
+    });
+}
+//=======================================additional global variables===============================================
+var title = process.argv.slice(3, process.argv.length).join(" ");
+var auth = require("./keys.js"), access = auth.twitterKeys;
+var fs = require("fs"), request = require("request"), spotify = require("spotify");
+var search = process.argv[3], inputCmd = process.argv[2];
+var msg = "If you haven't watched Mr.Nobody, then you should: http://www.imdb.com/title/tt0485947";
+var movieURL = "http://www.omdbapi.com/?t=" + searchThis(process.argv) + "&r=json";
+var twitterURL = "https://api.twitter.com/1.1/statuses/user_timeline.json";
+
+var Twitter = require("twitter"), twitterClient = Twitter(access);
+var twitParams = {screen_name: search, count: 20, exclude_replies: true};
+
+
+//==========================================Program=========================================================
+switch(inputCmd) {
+    case "movie-title":
+        if (process.argv[3]) {
+            movieCall(movieURL);
+        } else {
+            movieCall("http://www.omdbapi.com/?t=Mr.+Nobody&r=json");
+            console.log(msg + ".\nIt's on Netflix.");
+        }
+        break;
+
+    case "my-tweets":
+        tweets();
+        break;
+
+    case "spotify-track":
+        spotify();
+        break;
+
+    case "do-what-it-says":
+        doWhat();
+        break;
+
+    default:
+        console.log("Something went wrong. First enter movie-title, my-tweets, spotify-track, or do-what-it-says." + inputCmd);
 }
